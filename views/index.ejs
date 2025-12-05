@@ -1,0 +1,7 @@
+<% layout('layout') -%>
+
+<h1>Welcome to File Uploader!</h1>
+<form action="/files/upload" method="POST" enctype="multipart/form-data">
+  <input type="file" name="file" required />
+  <button type="submit">Upload</button>
+</form>
