@@ -1,0 +1,18 @@
+<% include layout.ejs %>
+
+<h1>Folder: <%= folder.name %></h1>
+
+<ul>
+  <% folder.files.forEach(file => { %>
+    <li>
+      <a href="/files/<%= file.id %>"><%= file.name %></a>
+      (Size: <%= file.size %> bytes, Uploaded: <%= file.uploadedAt.toDateString() %>)
+    </li>
+  <% }) %>
+</ul>
+
+<form action="/files/upload" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="folderId" value="<%= folder.id %>" />
+  <input type="file" name="file" required />
+  <button type="submit">Upload to this folder</button>
+</form>

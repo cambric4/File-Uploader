@@ -1,0 +1,10 @@
+<h1>Your Folders</h1>
+<ul>
+  <% folders.forEach(folder => { %>
+    <li><%= folder.name %></li>
+  <% }) %>
+</ul>
+<form action="/folders/create" method="post">
+  <input type="text" name="name" placeholder="New folder name" />
+  <button type="submit">Create</button>
+</form>
