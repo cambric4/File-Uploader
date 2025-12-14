@@ -1,0 +1,60 @@
+{
+  "name": "file-uploader",
+  "version": "1.0.0",
+  "description": "Express + Prisma + Passport file uploader project",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0",
+    "@quixo3/prisma-session-store": "^3.1.13",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.8.0",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.2.1",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.3.1",
+    "method-override": "^3.0.0",
+    "multer": "^2.0.2",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.16.3",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.1",
+    "@types/pg": "^8.16.0",
+    "nodemon": "^3.1.11",
+    "prisma": "^7.1.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cambric4/File-Uploader.git"
+  },
+  "keywords": [
+    "express",
+    "prisma",
+    "passport",
+    "multer",
+    "file-upload",
+    "ejs"
+  ],
+  "author": "cambric4",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cambric4/File-Uploader/issues"
+  },
+  "homepage": "https://github.com/cambric4/File-Uploader#readme"
+}

@@ -1,0 +1,109 @@
+<div class="flex justify-center">
+    <div class="w-full max-w-2xl">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4">
+                <h3 class="flex items-center text-xl font-semibold text-white">
+                    <i class="fas fa-upload mr-2"></i>
+                    Upload File
+                </h3>
+            </div>
+            <div class="p-6">
+                <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        <% errors.forEach(error => { %>
+                        <li><%= error.msg %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+                <% } %>
+
+                <form
+                    method="POST"
+                    action="/files/upload"
+                    enctype="multipart/form-data"
+                >
+                    <div class="mb-4">
+                        <label for="file" class="form-label">Choose File</label>
+                        <div class="file-upload-area">
+                            <i
+                                class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"
+                            ></i>
+                            <p class="mb-2">
+                                Drag and drop your file here or click to browse
+                            </p>
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="file"
+                                name="file"
+                                required
+                            />
+                        </div>
+                        <div class="form-text">
+                            Maximum file size: 10MB. Supported formats: JPEG,
+                            PNG, GIF, PDF, DOC, DOCX, TXT, ZIP
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label"
+                            >Description (Optional)</label
+                        >
+                        <textarea
+                            class="form-control"
+                            id="description"
+                            name="description"
+                            rows="3"
+                            placeholder="Enter a description for your file..."
+                        ></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="folderId" class="form-label">Folder (Optional)</label>
+                        <select class="form-select" id="folderId" name="folderId">
+                            <option value="">Root (No folder)</option>
+                            <% if (typeof folders !== 'undefined') { %>
+                                <% folders.forEach(folder => { %>
+                                    <option value="<%= folder.id %>" 
+                                            <%= selectedFolderId === folder.id ? 'selected' : '' %>>
+                                        <%= folder.name %>
+                                    </option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                        <div class="form-text">
+                            Choose a folder to organize your file, or leave blank to store in the root directory.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                id="isPublic"
+                                name="isPublic"
+                                value="true"
+                            />
+                            <label class="form-check-label" for="isPublic">
+                                Make this file public (anyone can download it)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="/files" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-1"></i>
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload me-1"></i>
+                            Upload File
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

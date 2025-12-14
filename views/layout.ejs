@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %> - File Uploader</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/custom.css">
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Inter', 'system-ui', 'sans-serif'],
+                        },
+                    }
+                }
+            }
+        </script>
+        <style>
+            .file-upload-area {
+                @apply border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-colors duration-300 cursor-pointer;
+            }
+            .file-upload-area:hover {
+                @apply border-blue-500;
+            }
+            .file-upload-area.dragover {
+                @apply border-blue-500 bg-blue-50;
+            }
+        </style>
+    </head>
+    <body class=\"bg-gray-50 font-sans\">
+        <nav class="bg-gray-900 text-white shadow-lg">
+            <div class="container mx-auto px-6">
+                <div class="flex justify-between items-center h-16">
+                    <a class="flex items-center text-xl font-bold text-white hover:text-blue-300 transition-colors" href="/">
+                        <i class="fas fa-cloud-upload-alt mr-2"></i>
+                        File Uploader
+                    </a>
+
+                    <div class="flex items-center space-x-4">
+                        <!-- Public Files - visible to everyone -->
+                        <a class="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 transition-colors" href="/files/public">
+                            <i class="fas fa-globe mr-1"></i>
+                            Public Files
+                        </a>
+                        
+                    <% if (typeof user !== 'undefined' && user) { %>
+                    <a class="nav-link" href="/files">
+                        <i class="fas fa-file me-1"></i>
+                        My Files
+                    </a>
+                    <a class="nav-link" href="/folders">
+                        <i class="fas fa-folder me-1"></i>
+                        Folders
+                    </a>
+                    <a class="nav-link" href="/files/upload">
+                        <i class="fas fa-upload me-1"></i>
+                        Upload
+                    </a>
+                    <span class="nav-link">
+                        <i class="fas fa-user me-1"></i>
+                        <%= user.name %>
+                    </span>
+                    <form class="d-inline" method="POST" action="/users/logout">
+                        <button
+                            type="submit"
+                            class="btn btn-outline-light btn-sm"
+                        >
+                            <i class="fas fa-sign-out-alt me-1"></i>
+                            Logout
+                        </button>
+                    </form>
+                    <% } else { %>
+                        <a class="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 transition-colors" href="/users/login">
+                            <i class="fas fa-sign-in-alt mr-1"></i>
+                            Login
+                        </a>
+                        <a class="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 transition-colors" href="/users/register">
+                            <i class="fas fa-user-plus mr-1"></i>
+                            Register
+                        </a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="w-full px-6 py-8">
+            <div class="max-w-7xl mx-auto">
+                <%- body %>
+            </div>
+        </main>
+
+        <script>
+            // File upload drag and drop functionality
+            document.addEventListener("DOMContentLoaded", function () {
+                const uploadArea = document.querySelector(".file-upload-area");
+                if (uploadArea) {
+                    ["dragenter", "dragover", "dragleave", "drop"].forEach(
+                        (eventName) => {
+                            uploadArea.addEventListener(
+                                eventName,
+                                preventDefaults,
+                                false
+                            );
+                        }
+                    );
+
+                    ["dragenter", "dragover"].forEach((eventName) => {
+                        uploadArea.addEventListener(
+                            eventName,
+                            highlight,
+                            false
+                        );
+                    });
+
+                    ["dragleave", "drop"].forEach((eventName) => {
+                        uploadArea.addEventListener(
+                            eventName,
+                            unhighlight,
+                            false
+                        );
+                    });
+
+                    uploadArea.addEventListener("drop", handleDrop, false);
+                }
+
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                function highlight(e) {
+                    uploadArea.classList.add("dragover");
+                }
+
+                function unhighlight(e) {
+                    uploadArea.classList.remove("dragover");
+                }
+
+                function handleDrop(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    const fileInput =
+                        document.querySelector('input[type="file"]');
+                    if (fileInput) {
+                        fileInput.files = files;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

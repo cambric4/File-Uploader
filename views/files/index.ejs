@@ -1,0 +1,162 @@
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h2 class="flex items-center text-3xl font-bold text-gray-900">
+            <i class="fas fa-file mr-3 text-blue-600"></i>
+            My Files
+        </h2>
+        <p class="text-gray-600 mt-2">Browse and manage all your uploaded files</p>
+    </div>
+    <div class="flex space-x-3">
+        <a href="/folders" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
+            <i class="fas fa-folder mr-2"></i>
+            Browse Folders
+        </a>
+        <a href="/files/upload" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+            <i class="fas fa-plus mr-2"></i>
+            Upload New File
+        </a>
+    </div>
+</div>
+
+<% if (files.length === 0) { %>
+<div class="text-center py-16">
+    <i class="fas fa-folder-open text-6xl text-gray-400 mb-6"></i>
+    <h4 class="text-2xl font-semibold text-gray-600 mb-2">No files uploaded yet</h4>
+    <p class="text-gray-500 mb-8">Start by uploading your first file!</p>
+    <a href="/files/upload" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+        <i class="fas fa-upload mr-2"></i>
+        Upload File
+    </a>
+</div>
+<% } else { %>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% files.forEach(file => { %>
+    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200 border border-gray-200 overflow-hidden">
+        <!-- Clickable file info area -->
+        <a href="/files/<%= file.id %>" class="block p-6 hover:bg-gray-50 transition-colors">
+            <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                    <% if (file.mimeType.startsWith('image/')) { %>
+                        <i class="fas fa-image text-2xl text-blue-600"></i>
+                    <% } else if (file.mimeType === 'application/pdf') { %>
+                        <i class="fas fa-file-pdf text-2xl text-red-600"></i>
+                    <% } else if (file.mimeType.includes('document') || file.mimeType.includes('word')) { %>
+                        <i class="fas fa-file-word text-2xl text-blue-600"></i>
+                    <% } else if (file.mimeType.includes('zip') || file.mimeType.includes('archive')) { %>
+                        <i class="fas fa-file-archive text-2xl text-yellow-600"></i>
+                    <% } else if (file.mimeType.includes('video')) { %>
+                        <i class="fas fa-file-video text-2xl text-purple-600"></i>
+                    <% } else if (file.mimeType.includes('audio')) { %>
+                        <i class="fas fa-file-audio text-2xl text-green-600"></i>
+                    <% } else { %>
+                        <i class="fas fa-file text-2xl text-gray-600"></i>
+                    <% } %>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-lg font-semibold text-gray-900 truncate" title="<%= file.originalName %>">
+                        <%= file.originalName %>
+                    </h3>
+                    <% if (file.description) { %>
+                        <p class="text-sm text-gray-600 mt-1 line-clamp-2">
+                            <%= file.description.substring(0, 100) %><%= file.description.length > 100 ? '...' : '' %>
+                        </p>
+                    <% } %>
+                    <div class="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-500">
+                        <span class="flex items-center">
+                            <i class="fas fa-calendar mr-1"></i>
+                            <%= new Date(file.uploadedAt).toLocaleDateString() %>
+                        </span>
+                        <span class="flex items-center">
+                            <i class="fas fa-weight mr-1"></i>
+                            <% if (file.size >= 1024 * 1024) { %>
+                                <%= (file.size / (1024 * 1024)).toFixed(2) %> MB
+                            <% } else { %>
+                                <%= (file.size / 1024).toFixed(1) %> KB
+                            <% } %>
+                        </span>
+                        <span class="flex items-center">
+                            <% if (file.folder) { %>
+                                <i class="fas fa-folder mr-1"></i>
+                                <%= file.folder.name %>
+                            <% } else { %>
+                                <i class="fas fa-home mr-1"></i>
+                                Root
+                            <% } %>
+                        </span>
+                        <span class="flex items-center">
+                            <% if (file.isPublic) { %>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <i class="fas fa-globe mr-1"></i>
+                                    Public
+                                </span>
+                            <% } else { %>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    <i class="fas fa-lock mr-1"></i>
+                                    Private
+                                </span>
+                            <% } %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        
+        <!-- Action buttons -->
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="flex justify-between items-center">
+                <a href="/files/<%= file.id %>" 
+                   class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    View Details
+                </a>
+                <div class="flex space-x-2">
+                    <a href="/files/<%= file.id %>/download"
+                       class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors"
+                       onclick="event.stopPropagation();">
+                        <i class="fas fa-download mr-1"></i>
+                        Download
+                    </a>
+                    <button onclick="event.stopPropagation(); deleteFile('<%= file.id %>');"
+                            class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-colors">
+                        <i class="fas fa-trash mr-1"></i>
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% }); %>
+</div>
+<% } %>
+
+<script>
+    function deleteFile(fileId) {
+        if (
+            confirm(
+                "Are you sure you want to delete this file? This action cannot be undone."
+            )
+        ) {
+            fetch(`/files/${fileId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(
+                            "Error deleting file: " +
+                                (data.error || "Unknown error")
+                        );
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Error deleting file");
+                });
+        }
+    }
+</script>
